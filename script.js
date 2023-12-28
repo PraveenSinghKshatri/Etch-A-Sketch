@@ -1,119 +1,110 @@
-/*
- Constants and Variables
-*/
-const gridSize = 16;
-const drawMode = false;
-const rainbowMode = false;
+const DEFAULT_COLOR = '#333333'
+const DEFAULT_MODE = 'color'
+const DEFAULT_SIZE = 16
 
-const mouseDown = false;
+let currentColor = DEFAULT_COLOR
+let currentMode = DEFAULT_MODE
+let currentSize = DEFAULT_SIZE
 
-/*
- HTML Elements
-*/
-// Grid elements
-const gridContainer = document.getElementById("grid-container");
-const gridItems = [...document.getElementsByClassName("grid-item")];
-// Settings elements
-const colorSelected = document.getElementById("color-input");
-const drawModeButton = document.getElementById("draw-mode-button");
-const rainbowButton = document.getElementById("rainbow-mode-button");
-const clearButton = document.getElementById("clear-button");
-const gridSizeText = document.getElementById("grid-size-text");
-const gridSizeInput = document.getElementById("grid-size-input");
-
-/*
- Functions
-*/
-// Select a random rgb color
-const randomRgbColor = () => {
-    return `rgb(${Math.floor(Math.random() * 255)} ${Math.floor(Math.random() * 255)} ${Math.floor(Math.random() * 255)})`;
+function setCurrentColor(newColor) {
+  currentColor = newColor
 }
 
-// Utility function to toggle a value (i made this in a function because is more visual)
-const toggle = (booleanValue) => {
-    return booleanValue = !booleanValue;
+function setCurrentMode(newMode) {
+  activateButton(newMode)
+  currentMode = newMode
 }
 
-// Refreshes grid removing current childs and calling createGrid to repopulate
-const refreshGrid = () => {
-    gridContainer.textContent = '';
-    createGrid(size);
+function setCurrentSize(newSize) {
+  currentSize = newSize
 }
 
-// Generates a grid with the specified size
-const createGrid = async () => {
-    size = gridSize ** 2
-    let newSizeString = ""
+const colorPicker = document.getElementById('colorPicker')
+const colorBtn = document.getElementById('colorBtn')
+const rainbowBtn = document.getElementById('rainbowBtn')
+const eraserBtn = document.getElementById('eraserBtn')
+const clearBtn = document.getElementById('clearBtn')
+const sizeValue = document.getElementById('sizeValue')
+const sizeSlider = document.getElementById('sizeSlider')
+const grid = document.getElementById('grid')
 
-    for (let n = 0; n < Math.sqrt(size); n++) {
-        newSizeString += "1fr ";
-    }
+colorPicker.oninput = (e) => setCurrentColor(e.target.value)
+colorBtn.onclick = () => setCurrentMode('color')
+rainbowBtn.onclick = () => setCurrentMode('rainbow')
+eraserBtn.onclick = () => setCurrentMode('eraser')
+clearBtn.onclick = () => reloadGrid()
+sizeSlider.onmousemove = (e) => updateSizeValue(e.target.value)
+sizeSlider.onchange = (e) => changeSize(e.target.value)
 
-    gridContainer.style.gridTemplateColumns = newSizeString;
-    gridContainer.style.gridTemplateRows = newSizeString;
+let mouseDown = false
+document.body.onmousedown = () => (mouseDown = true)
+document.body.onmouseup = () => (mouseDown = false)
 
-    // Add items to container
-    for (n = 0; n < size; n++) {
-        let item = document.createElement("div");
-        item.classList.add("grid-item");
-
-        // Add event listener to item
-        attachItemListeners(item);
-
-        // Append new element to grid container
-        gridContainer.appendChild(item);
-    }
-
+function changeSize(value) {
+  setCurrentSize(value)
+  updateSizeValue(value)
+  reloadGrid()
 }
 
-// Add event listener to the item
-const attachItemListeners = (element) => {
-    element.addEventListener('mousedown', (e) => { mouseDown = true; e.preventDefault() },);
-    element.addEventListener('mouseup', (e) => { mouseDown = false });
-    element.addEventListener('mouseover', () => {
-        if (mouseDown || !drawMode) {
-            let color = rainbowMode ? randomRgbColor() : colorSelected.value;
-            element.style.backgroundColor = color
-        }
-    });
+function updateSizeValue(value) {
+  sizeValue.innerHTML = `${value} x ${value}`
 }
 
-/*
-  Event listeners
-*/
-// Settings listeners
-drawModeButton.addEventListener('click', (e) => {
-    drawMode = toggle(drawMode);
+function reloadGrid() {
+  clearGrid()
+  setupGrid(currentSize)
+}
 
-    if (drawMode) {
-        drawModeButton.classList.add("button--selected")
-    } else {
-        drawModeButton.classList.remove("button--selected")
-    }
-})
-rainbowButton.addEventListener('click', () => {
-    rainbowMode = toggle(rainbowMode);
+function clearGrid() {
+  grid.innerHTML = ''
+}
 
-    if (rainbowMode) {
-        rainbowButton.classList.add("button--selected")
-    } else {
-        rainbowButton.classList.remove("button--selected")
-    }
-})
-clearButton.addEventListener('click', () => {
-    refreshGrid()
-})
-gridSizeInput.addEventListener('change', () => {
-    // Change grid size
-    gridSize = gridSizeInput.value;
+function setupGrid(size) {
+  grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`
+  grid.style.gridTemplateRows = `repeat(${size}, 1fr)`
 
-    // Change grid size text
-    gridSizeText.textContent = `${gridSizeInput.value} x ${gridSizeInput.value}`
+  for (let i = 0; i < size * size; i++) {
+    const gridElement = document.createElement('div')
+    gridElement.classList.add('grid-element')
+    gridElement.addEventListener('mouseover', changeColor)
+    gridElement.addEventListener('mousedown', changeColor)
+    grid.appendChild(gridElement)
+  }
+}
 
-    // Refresh size
-    refreshGrid();
-})
+function changeColor(e) {
+  if (e.type === 'mouseover' && !mouseDown) return
+  if (currentMode === 'rainbow') {
+    const randomR = Math.floor(Math.random() * 256)
+    const randomG = Math.floor(Math.random() * 256)
+    const randomB = Math.floor(Math.random() * 256)
+    e.target.style.backgroundColor = `rgb(${randomR}, ${randomG}, ${randomB})`
+  } else if (currentMode === 'color') {
+    e.target.style.backgroundColor = currentColor
+  } else if (currentMode === 'eraser') {
+    e.target.style.backgroundColor = '#fefefe'
+  }
+}
+
+function activateButton(newMode) {
+  if (currentMode === 'rainbow') {
+    rainbowBtn.classList.remove('active')
+  } else if (currentMode === 'color') {
+    colorBtn.classList.remove('active')
+  } else if (currentMode === 'eraser') {
+    eraserBtn.classList.remove('active')
+  }
+
+  if (newMode === 'rainbow') {
+    rainbowBtn.classList.add('active')
+  } else if (newMode === 'color') {
+    colorBtn.classList.add('active')
+  } else if (newMode === 'eraser') {
+    eraserBtn.classList.add('active')
+  }
+}
 
 window.onload = () => {
-    createGrid();
+  setupGrid(DEFAULT_SIZE)
+  activateButton(DEFAULT_MODE)
 }

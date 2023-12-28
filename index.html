@@ -1,40 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Etch-a-Sketch</title>
-        
-        <link rel="stylesheet" href="./styles.css">
-    </head>
-
-    <body>
-        <header>
-            <p id="title">Etch-A-Sketch</p>
-        </header>
-        
-        <main>
-            <div id="settings-container">
-                <input type="color" id="color-input">
-                <button id="draw-mode-button" class="button--unselected">Draw mode</button>
-                <button id="rainbow-mode-button" class="button--unselected">Rainbow mode</button>
-                <button id="clear__button" class="button--unselected">Clear</button>
-                <div id="grid-size-container">
-                    <p id="grid-size-text">16 x 16</p>
-                    <input type="range" id="grid-size-input" value="16" min="1" max="64">
-                </div>
-            </div>
-    
-            <div id="grid-container">
-                
-            </div>
-        </main>
-
-        <footer>
-            <div id="footer-container">
-                <p>Made with </p><img src="./heart.png" id="heart"><p> by <a href="https://github.com/PraveenSinghKshatri">Praveen Singh</a></p>
-            </div>
-        </footer>
-            
-        <script src="./script.js"></script>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Etch-A-sketch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="./style.css" />
+    <script
+      src="https://kit.fontawesome.com/4c536a6bd5.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="title">Etch-A-sketch</h1>
+    </header>
+    <main class="main">
+      <div class="settings">
+        <input id="colorPicker" type="color" value="#023047" />
+        <button id="colorBtn">Color mode</button>
+        <button id="rainbowBtn">Rainbow mode</button>
+        <button id="eraserBtn">Eraser</button>
+        <button id="clearBtn">Clear</button>
+        <div id="sizeValue" class="size-value">16 x 16</div>
+        <input id="sizeSlider" type="range" value="16" min="1" max="64" />
+      </div>
+      <div id="grid" class="grid"></div>
+    </main>
+    <footer class="footer">
+      <p>
+        Copyright ©  <a href="https://praveensinghkshatri.github.io/Portfolio-Website/#header" target="_blank">Praveen Singh <i class="fa-solid fa-heart fa-beat" style="color: #ff004f;"></i></a>
+        <script>
+          document.write(new Date().getFullYear())
+        </script>
+         
+      </p>
+      <a href="https://github.com/PraveenSinghKshatri" target="_blank">
+        <i class="fab fa-github"></i
+      ></a>
+    </footer>
+    <script src="script.js"></script>
+  </body>
 </html>
