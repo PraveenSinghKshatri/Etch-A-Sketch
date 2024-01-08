@@ -108,3 +108,10 @@ window.onload = () => {
   setupGrid(DEFAULT_SIZE)
   activateButton(DEFAULT_MODE)
 }
+
+// JavaScript to display the range of years in the copyright notice
+const copyrightYearElement = document.getElementById('copyright-year');
+const startYear = 2023;
+const currentYear = new Date().getFullYear();
+const yearRange = (startYear === currentYear) ? currentYear : `${startYear} - ${currentYear}`;
+copyrightYearElement.textContent = yearRange;
